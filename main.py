@@ -1,45 +1,63 @@
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.progressbar import ProgressBar
-from kivy.uix.popup import Popup
+import kivy
+from kivymd.app import MDApp
 from kivy.uix.label import Label
-from kivy.clock import Clock
+from kivy.uix.gridlayout import GridLayout 
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button 
+from kivy.lang import Builder
+from kivymd.uix.tab import MDTabsBase,MDTabs
+from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.toolbar import MDTopAppBar
+from kivymd.uix.label import MDLabel
 
-class ProgressPopup(Popup):
-    def __init__(self, max_value, **kwargs):
-        super(ProgressPopup, self).__init__(**kwargs)
-        self.progress_bar = ProgressBar(max=max_value)
-        self.content = BoxLayout(orientation='vertical') # tjs is the actual content property
-        self.label_=Label(text="lies")
-        self.content.add_widget(self.progress_bar)
-        self.content.add_widget(self.label_)
-        self.size_hint=None,None
-        self.size=400,100
 
-class MyApp(App):
-    def build(self):
-        layout = BoxLayout(orientation='vertical')
-        show_popup_button = Button(text='Show Popup', on_press=self.show_popup)
-        layout.add_widget(show_popup_button)
-        return layout
 
-    def show_popup(self, instance):
-        max_value = 100  # You can set your desired maximum value
-        self.popup = ProgressPopup(max_value, title='Progress Popup')
-        self.popup.open()
 
-        # Simulate a task that updates the progress bar
-        Clock.schedule_interval(self.update_progress, 1.0 / 30.0)
+class root(MDBoxLayout):
+    def __init__(self,**kwarge):
+        super().__init__(**kwarge)
+        self.orientation='vertical'
+        self.add_widget(MDTopAppBar())
+        self.Tabs_pannel=MDTabs()
+        self.add_widget(self.Tabs_pannel)
 
-    def update_progress(self, dt):
-        # Update the progress bar value here
-        if self.popup.progress_bar.value < self.popup.progress_bar.max:
-            self.popup.progress_bar.value += 1
-        else:
-            # Close the popup when the progress is complete
-            self.popup.dismiss()
-            Clock.unschedule(self.update_progress)
+#class content()
 
-if __name__ == '__main__':
-    MyApp().run()
+class Tab_items(MDBoxLayout,MDTabsBase):
+    def __init__(self,**kwarge):
+        super().__init__(**kwarge)
+        self.orientation='vertical'
+        self.content=MDLabel(halign="center",text="hello")
+
+#class Tab(MDBoxLayout, MDTabsBase):
+ #   pass
+        
+
+class my_app(MDApp):
+    def build (self):
+        self.body=root()
+
+        #self.tab_pannel=root().Tabs_pannel
+        self.body.Tabs_pannel.add_widget(Tab_items(title="tab 1"))
+        self.body.Tabs_pannel.add_widget(Tab_items(title="tab 2"))
+        
+        #self.tab_pannel.add_widget(Tab_items(title="tab 2"))
+        
+        #self.body.add_widget(self.tab_pannel)
+
+#        self.body=root()
+ #       self.tap=self.body.Tabs_#.ids.Tabs
+  #      tab_item_1=Tab_items(title="tab 1")
+   #     tab_item_2=Tab_items(title="tab 2")
+    #    self.tap.add_widget(tab_item_1)
+     #   self.tap.add_widget(tab_item_2)
+      #  self.body.add_widget(self.tap)
+        
+
+
+        return self.body
+        #return Builder.load_string(KV)
+
+if __name__=='__main__':
+    my_app().run()
